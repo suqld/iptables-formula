@@ -9,7 +9,7 @@ Pull requests are welcome for other platforms (or other improvements ofcourse!)
 Usage
 =====
 
-All the configuration for the firewall is done via pillar (pillar.example).
+All the configuration for the firewall is done via the pillar (see the pillar.example file).
 
 Enable globally:
 `pillars/firewall.sls`
@@ -64,10 +64,10 @@ Allow an entire class such as your internal network:
 Salt combines both and effectively enables your firewall and applies the rules.
 
 Notes:
- * Setting install to True will install `iptables` and `iptables-perrsistent` for you
+ * Setting install to True will install `iptables` and `iptables-persistent` for you
  * Strict mode means: Deny **everything** except explicitly allowed (use with care!)
  * block_nomatch: With non-strict mode adds in a "REJECT" rule below the accept rules, otherwise other traffic to that service is still allowed. Can be defined per-service or globally, defaults to False.
- * Servicenames can be either port numbers or servicenames (e.g. ssh, zabbix-agent, http) and are available for viewing/configuring in `/etc/services`
+ * Service names can be either port numbers or service names (e.g. ssh, zabbix-agent, http) and are available for viewing/configuring in `/etc/services`
 
 Using iptables.service
 ======================
@@ -104,18 +104,12 @@ Using iptables.nat
 You can use nat for interface.
 
 ```
-#!stateconf yaml . jinja
-
-# iptables -t nat -A POSTROUTING -o eth0 -s 192.168.18.0/24 -d 10.20.0.2 -j MASQUERADE
-# iptables -t nat -A POSTROUTING -o eth0 -s 192.168.18.0/24 -d 172.31.0.2 -j MASQUERADE
-
+  #Support nat
+  # iptables -t nat -A POSTROUTING -o eth0 -s 192.168.18.0/24 -d 10.20.0.2 -j MASQUERADE
 
   nat:
     eth0:
       rules:
         '192.168.18.0/24':
           - 10.20.0.2
-        '192.168.18.0/24':
-          - 172.31.0.2
-          - 10.0.0.0/8
 ```
